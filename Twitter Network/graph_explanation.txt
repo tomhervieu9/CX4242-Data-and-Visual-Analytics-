@@ -1,0 +1,6 @@
+For the graph, I spread out all the data neatly,so that every node label was easy to read.
+The node size is proportional to its degree.
+Each cluster is colored differently according to modularity.
+	This means that different percentages of moduarity represent
+	how dense each cluster is (in terms of interconnections).
+Used yifan hu proprtional design.

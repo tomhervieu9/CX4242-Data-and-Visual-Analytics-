@@ -1,0 +1,3 @@
+Average node degree: 2.036 - This represents the averag degree of every node. It serves to tell us the density of the graph (how connected the graph is).
+Diameter of the graph: 4 - This represents the path length between the 2 farthest nodes in the graph range of the graph).
+Average Path Length: 3.624 - This shows the average amount of edges between any 2 nodes in this graph.
