@@ -1,0 +1,1 @@
+I built the decision tree with an accurcy of 72% with 10 trees. My implementation of the decision tree suffered with fewer decision trees. I used various sub-samples of my training set to predict accuracy of the overall model. I built my decision tree by splitting the best attributes first and then the weaker ones.
