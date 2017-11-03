@@ -1,0 +1,2 @@
+Glucose levels are higher in the late afternoon sinc more data points gathered at a higher glucose level.
+Glucose levels are higher on weekends (people eat out on weekends).

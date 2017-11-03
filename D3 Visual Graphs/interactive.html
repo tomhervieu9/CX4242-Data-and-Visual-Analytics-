@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+    body {
+        font: arial;
+        width: 1000px;
+        height: 500px;
+    }
+
+    text {
+        font: 10px sans-serif;
+        color: white;
+    }
+    
+    text.value {
+        font-size: 100%;
+        fill: white;
+    }
+    
+    .axisHorizontal path{
+        fill: none;
+    }
+
+    .bar {
+        fill: steelblue;
+        fill-opacity: 1;
+    }
+    
+   .bar:hover {
+        fill: mediumblue;
+   }
+
+</style>
+<body align="center">
+<h2> Company FooBar: Revenue Generated 2015 </h2>
+<script src="../lib/d3.v3.min.js"></script>
+<script>
+
+data = [
+        {product:'Product A',freq:{Q1:716, Q2:1287, Q3:249, Q4:324}}
+,{product:'Product B',freq:{Q1:2000, Q2:1876, Q3:3009, Q4:973}}
+,{product:'Product C',freq:{Q1:899, Q2:2333, Q3:418, Q4:213}}
+,{product:'Product D',freq:{Q1:989, Q2:1543, Q3:1862, Q4: 1111}}
+,{product:'Product E',freq:{Q1:4200, Q2:3220, Q3:948, Q4: 629}}
+,{product:'Product F',freq:{Q1:1321, Q2:156, Q3:212, Q4: 821}}
+,{product:'Product G',freq:{Q1:1977, Q2:247, Q3:1203, Q4: 562}}
+,{product:'Product H',freq:{Q1:2498, Q2:2852, Q3:942, Q4: 444}}
+    ];
+
+var axisMargin = 100;
+    margin = 50;
+    valueMargin = 10;
+		width = 1200;
+		height = 430;
+    barHeight = 30;
+    barPadding = 20;
+    labelWidth = 0;
+    total = 0;
+
+    svg = d3.select('body')
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+
+    bar = svg.selectAll("g")
+            .data(data)
+            .enter()
+            .append("g");
+
+
+
+    bar.attr("class", "bar")
+            .attr("transform", function(d, i) {
+                return "translate(" + margin + "," + i * (barHeight + barPadding) + ")";
+            }).append("text")
+						.style("font-size", 16)
+            .attr("class", "label")
+            .attr("dy", "1.25em")
+            .text(function(d){
+                return d.product;
+            }).each(function() {
+                labelWidth = Math.ceil(Math.max(labelWidth, this.getBBox().width)) + 2;
+            });
+
+    max = d3.max(data, function(d) {
+        d.value = d.freq.Q1 + d.freq.Q2 + d.freq.Q3 + d.freq.Q4;
+        return d.value;
+    });
+
+    var scale = d3.scale.linear()
+            .domain([0, max])
+            .range([0, width - 2*margin - labelWidth]);
+
+
+    bar.append("rect")
+            .attr("transform", "translate("+labelWidth +", 0)")
+            .attr("height", barHeight)
+            .attr("width", function(d){
+                return scale(d.value);
+            });
+
+    bar.append("text")
+            .attr("class", "value")
+            .attr("y", barHeight/2)
+            .attr("dx", "3em")
+            .attr("dy", ".35em")
+            .text(function(d){
+                return ("$" + Number(d.value).toLocaleString());
+            })
+            .attr("x", function(d){
+                var width = this.getBBox().width;
+                return scale(d.value);
+            })
+						.attr("text-anchor", "end")
+            .style("font-size", 16);
+//____________________________________________________________________________________________________________
+    bar.on("mousemove", function(d){
+        var blocks = xIndex.selectAll('td').remove();
+        var blocks = xIndex.selectAll('td')
+        .data(function (e) {
+        var sum = 0;
+        data.map(function(xInd){
+            if (d.product == xInd.product) {
+              total = Number(xInd.freq["Q1"]) + Number(xInd.freq["Q2"]) + Number(xInd.freq["Q3"]) + Number(xInd.freq["Q4"]);
+              sum += Number(xInd.freq[e]); 
+            }      
+        })
+      
+        return [e,"$"+sum.toLocaleString(),(sum/total * 100).toFixed(0) + "%"];
+        })
+      .enter()
+      .append('td')
+      .text(function(d) { return d; });       
+    });
+//____________________________________________________________________________________________________________
+    
+    bar.on("mouseout", function(d){
+        var blocks = xIndex.selectAll('td').remove();
+        var blocks = xIndex.selectAll('td').data(function (d) {
+                sum = 0;
+                data.map(function(xInd) {
+                total += Number(xInd.freq["Q1"]) + Number(xInd.freq["Q2"]) + Number(xInd.freq["Q3"]) + Number(xInd.freq["Q4"]);
+                 sum += Number(xInd.freq[d]);
+                 return Number(xInd.freq[d]);
+                })
+               return  [d,"$" + sum.toLocaleString(),(sum/total *100).toFixed(0) + "%"];
+                })
+              .enter().append('td').text(function (d) { return d; });  
+    });
+
+//____________________________________________________________________________________________________________    
+    var table = d3.select('body').append('table');
+    var tbody = table.append('tbody');
+    
+    var xIndex = tbody.selectAll('tr')
+      .data(["Q1","Q2","Q3","Q4"])
+      .enter()
+      .append('tr');
+      
+    var blocks = xIndex.selectAll('td')
+      .data(function (d) {
+        sum=0;
+        total = 0
+        data.map(function(xInd){
+          total += Number(xInd.freq["Q1"]) + Number(xInd.freq["Q2"]) + Number(xInd.freq["Q3"]) + Number(xInd.freq["Q4"]);
+          sum += Number(xInd.freq[d]);
+          return Number(xInd.freq[d]);
+        });
+       
+       return [d,"$" + sum.toLocaleString(),(sum/total *100).toFixed(0) + "%"];
+    })
+    .enter()
+    .append('td')
+    .text(function (d) { return d; });
+
+        
+        
+    
+</script>
+</body>
